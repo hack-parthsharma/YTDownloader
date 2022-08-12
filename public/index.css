@@ -1,0 +1,236 @@
+:root {
+	--background: whitesmoke;
+	--text: rgb(20, 20, 20);
+	--box-main: rgb(143, 239, 207);
+	--box-toggle: rgb(108, 231, 190);
+	--box-toggleOn: rgb(67, 212, 164);
+	--theme-toggle: rgb(147, 174, 185);
+}
+
+body {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+		Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+		sans-serif;
+	text-align: center;
+	font-size: xx-large;
+	padding: 10px;
+	background-color: var(--background);
+	color: var(--text);
+}
+
+#title {
+	font-size: x-large;
+	font-family: sans-serif;
+}
+
+#menuIcon{
+	position: absolute;
+	top:10px;
+	right:10px;
+	width:40px;
+	height:40px;
+	cursor: pointer;
+	transition: .3s;
+}
+
+#menu{
+	display:none;
+	flex-direction: column;
+	backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    background-color: rgba(17, 25, 40, 0.75);
+    border-radius: 12px;
+	position: absolute;
+	top:40px;
+	right:50px;
+	padding:15px;
+	text-align: left;
+	opacity:1;
+	font-size: large;
+}
+.menuItem{
+	color:white;
+	text-decoration: none;
+	padding:5px;
+
+}
+.menuItem:active, .menuItem:link{
+	color:white;
+	
+}
+
+h1 {
+	font-size: 50px;
+}
+
+input[type="text"] {
+	padding: 10px;
+	border-radius: 10px;
+	border: 1px solid gray;
+	outline: none;
+	font-size: large;
+	width: 70%;
+}
+
+#getInfo {
+	padding: 10px;
+	background-color: rgb(64, 227, 64);
+	border: none;
+	border-radius: 8px;
+	color: white;
+	font-size: large;
+	cursor: pointer;
+
+	/* animation-name: clickAnimation; */
+	animation-duration: 0.5s;
+	animation-timing-function: linear;
+}
+
+@keyframes clickAnimation {
+	0% {
+		background-color: rgb(64, 227, 64);
+	}
+	50% {
+		background-color: rgb(40, 126, 40);
+	}
+	100% {
+		background-color: rgb(64, 227, 64);
+	}
+}
+
+#hidden {
+	display: none;
+	/* display: inline-block; */
+	background-color: var(--box-main);
+	border-radius: 10px;
+	width: 80%;
+	padding: 10px 10px 20px 10px;
+	color: var(--text);
+}
+#videoProgressBox, #audioProgressBox {
+	display: none;
+}
+
+#btnContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+}
+
+.toggleBtn {
+	width: 50%;
+	font-size: x-large;
+	border: none;
+	background-color: var(--box-toggle);
+	border-radius: 10px;
+	cursor: pointer;
+	padding: 8px;
+	color: var(--text);
+}
+
+select {
+	padding: 15px;
+	background-color: rgb(127, 253, 127);
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: large;
+	margin: 8px;
+	outline: none;
+}
+
+label {
+	position: relative;
+	top: 3px;
+}
+
+#videoList,
+#audioList {
+	display: none;
+}
+
+.submitBtn {
+	padding: 15px;
+	margin: 15px;
+	border-radius: 8px;
+	background-color: rgb(64, 227, 64);
+	color: white;
+	border: none;
+	font-size: large;
+	cursor: pointer;
+	display: inline-block;
+
+	animation-duration: 0.5s;
+	animation-timing-function: linear;
+}
+
+#incorrectMsg {
+	color: rgb(250, 59, 59);
+}
+
+#loadingWrapper {
+	display: none;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+#preparingBox {
+	display: none;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
+
+svg {
+	width: 100px;
+	height: 100px;
+	display: inline-block;
+	margin-left: 20px;
+}
+
+#themeToggle {
+	width: 55px;
+	height: 30px;
+	background-color: var(--theme-toggle);
+	border-radius: 40px;
+	display: flex;
+	cursor: pointer;
+	transition: linear;
+	transition-duration: 0.4s;
+}
+
+#themeToggleInside {
+	background-color: rgb(255, 255, 255);
+	border-radius: 30px;
+	width: 22px;
+	height: 22px;
+	margin: 4px;
+	position: relative;
+	transition: linear;
+	transition-duration: 0.4s;
+	left: 0px;
+}
+
+.savedMsg {
+	color: rgb(131, 222, 253);
+}
+.savedMsg:active,
+.savedMsg:link {
+	color: rgb(131, 222, 253);
+}
+
+/* Scrollbar */
+
+body::-webkit-scrollbar {
+	width: 5px;
+}
+
+body::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+}
+
+body::-webkit-scrollbar-thumb {
+	background-color: rgb(79, 78, 78);
+	border-radius: 5px;
+}
