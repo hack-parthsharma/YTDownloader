@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Youtube Video Downloader</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="index.js" defer></script>
+
+</head>
+
+<body>
+    <!-- Theme toggle -->
+    <div id="themeToggle" onclick="toggle()">
+        <div id="themeToggleInside"></div>
+    </div>
+
+    <!-- Menu icon -->
+    <img src="menu.png" alt="menu" id="menuIcon">
+
+    <!-- Menu -->
+    <div id="menu">
+        <a href="/preferences" class="menuItem">Preferences</a>
+        <a href="/about" class="menuItem">About</a>
+    </div>
+
+
+    <h1>YouTube Downloader</h1>
+    <input type="text" name="url" placeholder="Paste Video URL or ID here" id="url" autofocus>
+    <!-- Get info button -->
+    <button id="getInfo" onclick="clickAnimation('getInfo')">Get info</button>
+
+    <p id="incorrectMsg"></p>
+
+    <div id="loadingWrapper">
+        <span>Loading</span>
+        <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+            y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+            <circle fill="rgb(84, 171, 222)" stroke="none" cx="6" cy="50" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1" />
+            </circle>
+            <circle fill="rgb(84, 171, 222)" stroke="none" cx="26" cy="50" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2" />
+            </circle>
+            <circle fill="rgb(84, 171, 222)" stroke="none" cx="46" cy="50" r="6">
+                <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3" />
+            </circle>
+        </svg>
+    </div>
+
+
+    <div id="hidden">
+        <div id="btnContainer">
+            <button class="toggleBtn" id="videoToggle">Video</button>
+            <button class="toggleBtn" id="audioToggle">Audio</button>
+        </div>
+        <p id="title">Title: </p>
+
+        <div id="videoList">
+            <label>Select Format - </label>
+            <select id="videoFormatSelect">
+            </select>
+            <br>
+            <input type="hidden" name="url" class="url" id="url">
+            <button class="submitBtn" id="videoDownload">Download</button>
+        </div>
+
+        <div id="audioList">
+            <label>Select Format - </label>
+            <select id="audioFormatSelect">
+            </select>
+            <br>
+            <input type="hidden" name="url" class="url">
+            <button class="submitBtn" id="audioDownload">Download</button>
+        </div>
+
+        <div id="preparingBox">
+            <span>Preparing</span>
+            <svg version="1.1" id="L4" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                x="0px" y="0px" viewBox="0 0 100 100" enable-background="new 0 0 0 0" xml:space="preserve">
+                <circle fill="rgb(84, 171, 222)" stroke="none" cx="6" cy="50" r="6">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.1" />
+                </circle>
+                <circle fill="rgb(84, 171, 222)" stroke="none" cx="26" cy="50" r="6">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.2" />
+                </circle>
+                <circle fill="rgb(84, 171, 222)" stroke="none" cx="46" cy="50" r="6">
+                    <animate attributeName="opacity" dur="1s" values="0;1;0" repeatCount="indefinite" begin="0.3" />
+                </circle>
+            </svg>
+        </div>
+
+        <p id="savedMsg"></p>
+
+        <div class="progressBox" id="videoProgressBox">
+            <label>Video Progress: <progress max="100" value="0" id="videoProgress"></progress></label>
+            <br>
+            <label>Audio Progress: <progress max="100" value="0" id="audioProgress"></progress></label>
+        </div>
+
+        <div class="progressBox" id="audioProgressBox">
+            <label>Download Progress: <progress max="100" value="0" id="onlyAudioProgress"></progress></label>
+        </div>
+
+
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        function getId(id) {
+            return (document.getElementById(id))
+        }
+
+        let totalProgress = 0
+        const socket = io();
+
+        socket.on("id", (id) => {
+            document.cookie = "id=" + id + "; SameSite=Strict"
+        })
+
+        // Video and audio progress
+        socket.on("videoProgress", (progress) => {
+            if (progress != 100) {
+                getId("videoProgressBox").style.display = "block"
+                getId("preparingBox").style.display = "none"
+                getId("videoProgress").value = progress
+            }
+        })
+
+        socket.on("audioProgress", (progress) => {
+
+            if (progress != 100) {
+                getId("preparingBox").style.display = "none"
+                getId("audioProgress").value = progress
+            }
+        })
+
+        ////////////
+
+        // Only audio progress
+        socket.on("onlyAudioProgress", (progress) => {
+            if (progress != 100) {
+                getId("preparingBox").style.display = "none"
+                getId("audioProgressBox").style.display = "block"
+                getId("onlyAudioProgress").value = progress
+            }
+
+        })
+
+        socket.on("saved", (savedLocation) => {
+            const notify = new Notification('ytDownloader', {
+                body: "File saved successfully.",
+                icon: 'icon.png'
+            });
+            getId("videoProgressBox").style.display = "none";
+            getId("audioProgressBox").style.display = "none";
+            document.querySelector(".submitBtn").style.display = "inline-block"
+
+            getId("savedMsg").innerHTML = `File saved to <a class="savedMsg" href='file://${savedLocation}'>${savedLocation}</a>`
+        })
+    </script>
+</body>
+
+</html>
